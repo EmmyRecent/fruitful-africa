@@ -17,7 +17,7 @@ We follow the **Conventional Commits** format to keep our Git history clean and 
 - fix(auth): resolve login session timeout bug
 - docs(readme): update installation instructions
 - style(navbar): fix mobile alignment
-- refactor(api): separate fetch logic into utils  
+- refactor(api): separate fetch logic into utils
 - chore(deps): update react-router to v6.22.1
 
 ---
