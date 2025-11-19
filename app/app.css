@@ -112,6 +112,26 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@theme {
+  /* Colors  */
+  --color-primaryColor: #d97706;
+  --color-secondaryColor: #3e2723;
+  --color-tertiaryColor: #92400e;
+
+  /* Fonts */
+  --font-poppins: var(--font-poppins), sans-serif;
+
+  /* Border */
+  --radius-round: 16px;
+}
+
+@layer utilities {
+  .wrapper {
+    width: min(1400px, calc(100% - 32px));
+    margin-inline: auto;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
