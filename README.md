@@ -1,4 +1,4 @@
-# 🏡 Luxuora
+# Fruitful Africa
 
 **Fruitful Africa** is an ecommerce platform that aims to connect vendors offering exportable goods, craft textiles, and foodstuffs with global diaspora buyers.
 
