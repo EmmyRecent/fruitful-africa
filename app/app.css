@@ -120,9 +120,10 @@
 
   /* Fonts */
   --font-poppins: var(--font-poppins), sans-serif;
+  --font-inter: var(--font-inter), sans-serif;
 
   /* Border */
-  --radius-round: 16px;
+  --radius-round: 10px;
 }
 
 @layer utilities {
@@ -130,13 +131,22 @@
     width: min(1400px, calc(100% - 32px));
     margin-inline: auto;
   }
+
+  .no-scroll {
+    @apply h-screen overflow-hidden;
+  }
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 scroll-smooth;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply text-secondaryColor font-poppins bg-transparent overflow-x-hidden;
+  }
+
+  section {
+    @apply flex min-h-screen items-center justify-center py-10;
   }
 }

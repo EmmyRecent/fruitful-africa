@@ -1,17 +1,31 @@
 "use client";
 
 import { navLinks } from "@/app/constants";
-import { Menu, Search, ShoppingCart, User } from "lucide-react";
+import { Menu, Search, ShoppingCart, User, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Nav = () => {
   const [openSearch, setOpenSearch] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   const handleSearchOpen = () => {
     setOpenSearch((prevValue) => !prevValue);
   };
+
+  const handleToggleNav = () => {
+    setIsNavOpen((prevValue) => !prevValue);
+  };
+
+  // Add and remove scroll on the body when nav is open and closed.
+  useEffect(() => {
+    if (isNavOpen) {
+      document.querySelector("body")?.classList.add("no-scroll");
+    } else {
+      document.querySelector("body")?.classList.remove("no-scroll");
+    }
+  }, [isNavOpen]);
 
   return (
     <header className="shadow-2xl">
@@ -49,23 +63,57 @@ const Nav = () => {
             <ul className="flex gap-4 [&>a]:hover:text-primaryColor [&>a]:text-secondaryColor [&>a]:text-lg">
               {navLinks.map((link) => (
                 <Link key={link.text} href={link.href}>
-                  {link.text}
+                  <li>{link.text}</li>
                 </Link>
               ))}
             </ul>
           </nav>
 
           {/* Mobile nav links */}
-          <nav className="lg:hidden"></nav>
+          <nav
+            className={`lg:hidden ${isNavOpen ? "translate-x-0" : "translate-x-[900px]"} transition-all duration-500 ease-in-out z-50 bg-linear-to-br from-primaryColor to-secondaryColor fixed top-0  w-full max-w-[75vw] right-0 bottom-0 flex flex-col justify-center`}
+          >
+            <X
+              className="text-white absolute top-0 right-0 mr-5 mt-9 cursor-pointer"
+              size={25}
+              onClick={handleToggleNav}
+            />
+
+            <ul className="pt-8 px-4 flex flex-col gap-8">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.text}
+                  href={link.href}
+                  className="mr-auto"
+                  onClick={handleToggleNav}
+                >
+                  <li className="text-white text-base cursor-pointer hover:font-semibold">
+                    {link.text}
+                  </li>
+                </Link>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Nav overlay */}
+          {isNavOpen && (
+            <div
+              className="inset-0 overflow-y-hidden fixed bg-black/50 h-screen z-10 transition-all duration-500 ease-in-out "
+              onClick={handleToggleNav}
+            ></div>
+          )}
 
           <div className="flex gap-6 md:gap-8">
             <Search
-              className="size-6 text-secondaryColor cursor-pointer lg:hidden"
+              className="size-5 text-secondaryColor cursor-pointer lg:hidden"
               onClick={handleSearchOpen}
             />
-            <ShoppingCart className="text-secondaryColor size-6 cursor-pointer" />
-            <User className="text-secondaryColor size-6 cursor-pointer" />
-            <Menu className="text-secondaryColor size-6 cursor-pointer lg:hidden" />
+            <ShoppingCart className="text-secondaryColor size-5 cursor-pointer" />
+            <User className="text-secondaryColor size-5 cursor-pointer" />
+            <Menu
+              className="text-secondaryColor size-5 cursor-pointer lg:hidden"
+              onClick={handleToggleNav}
+            />
           </div>
         </div>
 
@@ -78,7 +126,7 @@ const Nav = () => {
                   className="w-full placeholder:text-tertiaryColor h-10 px-4 outline-none text-base"
                   placeholder="Search products..."
                 />
-                <Search className="size-6 text-tertiaryColor" />
+                <Search className="size-5 text-tertiaryColor" />
               </div>
             </form>
           </div>
