@@ -1,27 +1,27 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import ProductCard from "../../components/ProductCard";
 import { products } from "../constants";
-import ProductCard from "../constants/ProductCard";
 
 const FeaturedProducts = () => {
   return (
     <section>
       <div className="wrapper">
-        <div className="flex justify-between items-center pb-4 gap-4">
-          <div className=" flex flex-col gap-4 mb-8">
-            <h3 className="text-secondaryColor text-lg lg:text-xl font-semibold">
+        <div className="flex items-center justify-between gap-4 pb-4">
+          <div className="mb-8 flex flex-col gap-4">
+            <h3 className="text-secondaryColor text-lg font-semibold lg:text-xl">
               Featured Products
             </h3>
 
-            <p className="text-tertiaryColor text-base lg:text-lg font-normal">
+            <p className="text-tertiaryColor text-base font-normal lg:text-lg">
               Handpicked selections from our verified vendors
             </p>
           </div>
 
           <Link href="marketplace">
             <Button
-              className="bg-transparent text-black border-primaryColor/20 border cursor-pointer"
+              className="border-primaryColor/20 cursor-pointer border bg-transparent text-black"
               size="lg"
             >
               <span>View All</span>
@@ -30,7 +30,7 @@ const FeaturedProducts = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
             <ProductCard
               id={product.id}

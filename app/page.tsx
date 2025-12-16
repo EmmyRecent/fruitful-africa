@@ -1,10 +1,10 @@
-import Footer from "@/components/footer";
-import Nav from "@/components/nav";
+import Footer from "@/components/Footer";
+import Nav from "@/components/Nav";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Category, FeaturedProducts, Features, Hero } from "./sections";
 
-const Page = async () => {
+const Page = () => {
   return (
     <>
       <Nav />
@@ -15,7 +15,7 @@ const Page = async () => {
         <Category />
         <FeaturedProducts />
 
-        <div className="bg-linear-to-b from-secondaryColor to-primaryColor h-[350px] flex items-center justify-center my-24 text-white text-center">
+        <div className="from-secondaryColor to-primaryColor my-24 flex h-[350px] items-center justify-center bg-linear-to-b text-center text-white">
           <div className="wrapper flex flex-col gap-4">
             <h3 className="text-lg">Become a vendor</h3>
 
@@ -25,7 +25,7 @@ const Page = async () => {
               your craft.
             </p>
 
-            <Button className="mx-auto text-tertiaryColor bg-white">
+            <Button className="text-tertiaryColor mx-auto bg-white">
               <span>Start Selling Today</span>
               <ArrowRight />
             </Button>
