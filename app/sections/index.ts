@@ -1,6 +1,6 @@
-import Category from "./category";
-import FeaturedProducts from "./featuredProducts";
-import Features from "./features";
-import Hero from "./hero";
+import Category from "./Category";
+import FeaturedProducts from "./FeaturedProducts";
+import Features from "./Features";
+import Hero from "./Hero";
 
 export { Category, FeaturedProducts, Features, Hero };

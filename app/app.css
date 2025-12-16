@@ -143,7 +143,7 @@
   }
 
   body {
-    @apply text-secondaryColor font-poppins bg-transparent overflow-x-hidden;
+    @apply text-secondaryColor font-poppins overflow-x-hidden bg-[#FFFBF7];
   }
 
   section {

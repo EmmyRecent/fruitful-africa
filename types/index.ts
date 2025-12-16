@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type NavLinksType = {
   href: string;
   text: string;
@@ -25,4 +27,29 @@ export type ProductType = {
   rating: number;
   category: CategoryType["category"];
   amount: number;
+};
+
+export type State = {
+  errors?: {
+    firstName?: string[];
+    lastName?: string[];
+    email?: string[];
+    password?: string[];
+  };
+  message?: string | null;
+  data: {
+    firstName?: string;
+    lastName?: string;
+    email: string;
+    password: string;
+  };
+};
+
+export type UserCustomerData = {
+  firstName?: string;
+  lastName?: string;
+  phone?: number;
+  email: string;
+  initial: string;
+  createdAt: Timestamp;
 };
