@@ -45,6 +45,28 @@ export type State = {
   };
 };
 
+export type AddProductState = {
+  errors?: {
+    productName?: string[];
+    productCategory?: string[];
+    productLocation?: string[];
+    productImage?: string[];
+    productPrice?: string[];
+    productDescription?: string[];
+    productStock?: string[];
+  };
+  message?: string | null;
+  data: {
+    productName: string;
+    productCategory: string;
+    productLocation: string;
+    productImage: string[];
+    productPrice: string;
+    productDescription: string;
+    productStock: string;
+  };
+};
+
 export type UserCustomerData = {
   firstName?: string;
   lastName?: string;
@@ -53,3 +75,9 @@ export type UserCustomerData = {
   initial: string;
   createdAt: Timestamp;
 };
+
+export type ProductDataType = AddProductState["data"] & {
+  country?: string;
+};
+
+export type ProductWithId = ProductDataType & { id: string };

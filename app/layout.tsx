@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./app.css";
 import { AuthProvider } from "./context/AuthContext";
+import { DataProvider } from "./context/DataContext";
 
 const poppinsFont = Poppins({
   weight: ["400", "500", "600", "700", "800"],
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${poppinsFont.variable} ${interFont.variable} antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <DataProvider>{children}</DataProvider>
+        </AuthProvider>
       </body>
     </html>
   );

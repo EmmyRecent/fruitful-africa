@@ -1,20 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
-import { CategoryType } from "@/types";
 import { Shield } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-type ProductCardType = {
-  id: number;
+type ProductCardProps = {
+  id: string;
   country: string;
   img: string;
   name: string;
-  sellerName: string;
-  verified: boolean;
-  rating: number;
-  category: CategoryType["category"];
-  amount: number;
+  verified?: boolean;
+  rating?: number;
+  category: string;
+  amount: string;
+  description: string;
 };
 
 const ProductCard = ({
@@ -22,52 +21,55 @@ const ProductCard = ({
   country,
   img,
   name,
-  sellerName,
   verified,
-  rating,
+  // rating,
   category,
   amount,
-}: ProductCardType) => {
+  description,
+}: ProductCardProps) => {
   return (
-    <Card className="bg-none rounded-round relative p-0">
+    <Card className="rounded-round relative h-full w-full border-none bg-none p-0 shadow-lg">
       <Image
-        src={`/${img}.png`}
+        src={img}
         alt={name}
         width={326}
         height={256}
-        className="w-full rounded-t-round"
+        className="rounded-t-round h-[380px] w-full object-cover"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
 
-      <div className="absolute bg-white text-black p-2 rounded-round right-0 text-sm translate-y-3 -translate-x-2">
+      <div className="rounded-round absolute right-0 -translate-x-2 translate-y-3 bg-white p-2 text-sm text-black shadow-lg">
         <p>{country}</p>
       </div>
 
-      <CardContent className="px-4 flex flex-col gap-1">
-        <div className="flex items-center justify-between rounded-round">
-          <CardTitle className="p-0 m-0 text-secondaryColor text-xl">
+      <CardContent className="flex flex-col gap-1 px-4">
+        <div className="rounded-round flex items-center justify-between">
+          <CardTitle className="text-secondaryColor m-0 p-0 text-xl">
             {name}
           </CardTitle>
 
           {verified && (
-            <div className="bg-primaryColor/10 p-2 flex gap-3 rounded-round">
-              <Shield className="text-primaryColor size-5 justify-center items-center" />
-              <p className="text-primaryColor text-sm font-medium">Verified</p>
+            <div className="bg-primaryColor/10 rounded-round flex items-center justify-center gap-2 p-2">
+              <Shield className="text-primaryColor size-4" />
+              <p className="text-primaryColor text-xs font-medium">Verified</p>
             </div>
           )}
         </div>
 
-        <p className="text-tertiaryColor text-base">{sellerName}</p>
+        <div className="rounded-round border-primaryColor/30 mr-auto border bg-transparent px-3 py-1">
+          <p className="text-sm capitalize">{category}</p>
+        </div>
 
-        <div className="bg-transparent mr-auto py-1 px-3 rounded-round border border-primaryColor/30">
-          <p className="capitalize text-sm">{category}</p>
+        <div>
+          <p className="text-sm">{description.trim()}</p>
         </div>
       </CardContent>
 
       <div className="px-4">
-        <CardFooter className="flex justify-between items-center py-5 px-0 border-t border-primaryColor ">
-          <p className="text-3xl text-primaryColor">£{amount}</p>
+        <CardFooter className="border-primaryColor flex items-center justify-between border-t px-0 py-5">
+          <p className="text-primaryColor text-3xl">£{amount}</p>
 
-          <Link href={`/${id}`}>
+          <Link href={`/product/${id}`}>
             <Button className="cursor-pointer text-base" variant={"default"}>
               View Details
             </Button>

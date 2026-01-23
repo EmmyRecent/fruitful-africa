@@ -2,15 +2,11 @@ import { CategoryType, FeaturesType, NavLinksType, ProductType } from "@/types";
 
 export const navLinks: NavLinksType[] = [
   {
-    href: "marketplace",
+    href: "/marketplace",
     text: "Marketplace",
   },
   {
-    href: "makers",
-    text: "Meet The Makers",
-  },
-  {
-    href: "vendor",
+    href: "/vendor/1",
     text: "Become a Vendor",
   },
 ];

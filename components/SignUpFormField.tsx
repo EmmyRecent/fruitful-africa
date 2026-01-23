@@ -62,7 +62,7 @@ const SignUpFormField = () => {
         email,
         initial: `${firstName?.slice(0, 1)}${lastName?.slice(0, 1)}`,
         createdAt: Timestamp.now(),
-      };
+      }; 
 
       console.log("Result from user signUp:", result);
 

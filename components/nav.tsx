@@ -112,8 +112,10 @@ const Nav = () => {
               className="text-secondaryColor size-5 cursor-pointer lg:hidden"
               onClick={handleSearchOpen}
             />
-            <ShoppingCart className="text-secondaryColor size-5 cursor-pointer" />
-            <Link href={user && user?.uid ? `/user/${user.uid}` : "login"}>
+            <Link href={"/cart"}>
+              <ShoppingCart className="text-secondaryColor size-5 cursor-pointer" />
+            </Link>
+            <Link href={user && user?.uid ? `/user/${user.uid}` : "/login"}>
               <User className="text-secondaryColor size-5 cursor-pointer" />
             </Link>
             <Menu

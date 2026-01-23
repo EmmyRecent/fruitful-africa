@@ -1,10 +1,14 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import ProductCard from "../../components/ProductCard";
-import { products } from "../constants";
+import { useData } from "../context/DataContext";
 
 const FeaturedProducts = () => {
+  const { products } = useData();
+
   return (
     <section>
       <div className="wrapper">
@@ -30,19 +34,18 @@ const FeaturedProducts = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
+        <div className="grid grid-cols-1 items-center justify-center gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {products.slice(0, 4).map((product) => (
             <ProductCard
-              id={product.id}
               key={product.id}
-              country={product.country}
-              amount={product.amount}
-              category={product.category}
-              img={product.img}
-              name={product.name}
-              rating={product.rating}
-              sellerName={product.sellerName}
-              verified={product.verified}
+              id={product.id}
+              name={product.productName}
+              category={product.productCategory}
+              country={product.productLocation}
+              amount={product.productPrice}
+              img={product.productImage?.[0]}
+              description={product.productDescription}
+              verified={true}
             />
           ))}
         </div>
