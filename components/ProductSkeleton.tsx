@@ -36,7 +36,7 @@ const ProductSkeleton = ({ className }: ProductSkeletonProps) => {
 
         {/* Footer */}
         <div className="px-4">
-          <div className="border-primaryColor flex items-center justify-between border-t px-0 py-5">
+          <div className="my-3 flex items-center justify-between border-t border-gray-300 px-0 py-5">
             {/* Price */}
             <Skeleton className="h-10 w-24" />
             {/* Button */}

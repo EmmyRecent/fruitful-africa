@@ -1,14 +1,9 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import ProductCard from "../../components/ProductCard";
-import { useData } from "../context/DataContext";
+import FeaturedProductCard from "@/components/FeaturedProductCard";
 
 const FeaturedProducts = () => {
-  const { products } = useData();
-
   return (
     <section>
       <div className="wrapper">
@@ -23,7 +18,7 @@ const FeaturedProducts = () => {
             </p>
           </div>
 
-          <Link href="marketplace">
+          <Link href="/marketplace">
             <Button
               className="border-primaryColor/20 cursor-pointer border bg-transparent text-black"
               size="lg"
@@ -34,21 +29,7 @@ const FeaturedProducts = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 items-center justify-center gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {products.slice(0, 4).map((product) => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              name={product.productName}
-              category={product.productCategory}
-              country={product.productLocation}
-              amount={product.productPrice}
-              img={product.productImage?.[0]}
-              description={product.productDescription}
-              verified={true}
-            />
-          ))}
-        </div>
+        <FeaturedProductCard />
       </div>
     </section>
   );

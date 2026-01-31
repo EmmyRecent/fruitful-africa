@@ -27,11 +27,11 @@ const AddProduct = () => {
     data: {
       productName: "",
       productCategory: "",
-    productLocation: "",
+      productLocation: "",
       productImage: [],
       productPrice: "",
-    productDescription: "",
-    productStock: "",
+      productDescription: "",
+      productStock: "",
     },
   };
   const [message, formAction, isPending] = useActionState(
@@ -93,21 +93,20 @@ const AddProduct = () => {
     const hasErrors = Object.keys(message.errors ?? {}).length > 0;
     const hasData =
       !!message.data?.productName &&
-      !!message.data?.productCategory && 
+      !!message.data?.productCategory &&
       !!message.data?.productLocation &&
       Array.isArray(message.data?.productImage) &&
       message.data.productImage.length > 0 &&
-      !!message.data?.productPrice &&  
+      !!message.data?.productPrice &&
       !!message.data?.productDescription &&
       !!message.data?.productStock;
-
 
     if (hasErrors || !hasData) return;
 
     const persistProduct = async () => {
       try {
         const data: ProductDataType = {
-          productName: message.data.productName,  
+          productName: message.data.productName,
           productCategory: message.data.productCategory,
           productLocation: message.data.productLocation,
           productImage: message.data.productImage,
@@ -205,8 +204,8 @@ const AddProduct = () => {
                     alt="Product Image"
                     width={400}
                     height={400}
-                    fill
-                    className="rounded-round shadow-xl object-cover"
+                    // fill
+                    className="rounded-round object-cover shadow-xl"
                   />
                 ))}
               </div>
@@ -232,7 +231,15 @@ const AddProduct = () => {
               fieldErrors={message?.errors?.productStock}
             />
 
-            <InputField name="productDescription" type="textarea" text="Product Description" placeholder="Product Description" inputValue={inputValue} handleTextareaChange={handleTextareaChange} fieldErrors={message?.errors?.productDescription} />
+            <InputField
+              name="productDescription"
+              type="textarea"
+              text="Product Description"
+              placeholder="Product Description"
+              inputValue={inputValue}
+              handleTextareaChange={handleTextareaChange}
+              fieldErrors={message?.errors?.productDescription}
+            />
 
             <Button
               type="submit"

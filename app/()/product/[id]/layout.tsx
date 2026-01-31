@@ -2,7 +2,9 @@ import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import React from "react";
 
-const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+const ProductLayout = ({
+  children,
+}: Readonly<{ children: React.ReactNode }>) => {
   return (
     <>
       <Nav />
@@ -14,4 +16,4 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   );
 };
 
-export default layout;
+export default ProductLayout;

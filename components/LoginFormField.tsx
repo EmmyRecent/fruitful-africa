@@ -74,6 +74,7 @@ const LoginFormField = () => {
   };
 
   return (
+    // Fix /remove onsubmit function
     <form action={formAction} onSubmit={handleFormSubmission}>
       <div className="mt-6 flex flex-col gap-4">
         <InputField

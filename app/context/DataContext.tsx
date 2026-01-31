@@ -1,38 +1,26 @@
 "use client";
 
-import { getProduct } from "@/firebase/services/firestore";
 import { ProductWithId } from "@/types";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 type DataContextType = {
   products: ProductWithId[];
-  loading: boolean;
+  setProducts: React.Dispatch<React.SetStateAction<ProductWithId[]>>;
 };
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
-export const DataProvider = ({ children }: { children: React.ReactNode }) => {
-  const [products, setProducts] = useState<ProductWithId[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const data = await getProduct();
-
-        setProducts(data);
-      } catch (error) {
-        console.log("Error fetching product data from firebase:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
-  }, []);
+export const DataProvider = ({
+  initialProducts,
+  children,
+}: {
+  initialProducts: ProductWithId[];
+  children: React.ReactNode;
+}) => {
+  const [products, setProducts] = useState<ProductWithId[]>(initialProducts);
 
   return (
-    <DataContext.Provider value={{ products, loading }}>
+    <DataContext.Provider value={{ products, setProducts }}>
       {children}
     </DataContext.Provider>
   );

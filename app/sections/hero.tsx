@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -23,10 +24,13 @@ const Hero = () => {
           </p>
 
           <div className="flex items-center justify-start gap-4 max-sm:flex-wrap">
-            <Button className="bg-primaryColor cursor-pointer" size="lg">
-              <span className="text-base">Explore Marketplace</span>
-              <ArrowRight />
-            </Button>
+            <Link href="/marketplace">
+              <Button className="bg-primaryColor cursor-pointer" size="lg">
+                <span className="text-base">Explore Marketplace</span>
+                <ArrowRight />
+              </Button>
+            </Link>
+
             <Button
               className="text-secondaryColor border-primaryColor/20 cursor-pointer border bg-white"
               size="lg"

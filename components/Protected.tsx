@@ -3,6 +3,7 @@
 import { useAuth } from "@/app/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
+import { Spinner } from "./ui/spinner";
 
 // A route to handle route protection
 const Protected = ({ children }: { children: ReactNode }) => {
@@ -26,7 +27,7 @@ const Protected = ({ children }: { children: ReactNode }) => {
   if (loading)
     return (
       <div className="wrapper flex min-h-screen items-center justify-center">
-        <p className="text-primaryColor text-base">Loading...</p>
+        <Spinner className="text-primaryColor size-6" />
       </div>
     );
 

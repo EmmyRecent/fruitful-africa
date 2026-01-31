@@ -8,7 +8,6 @@ import {
   Minus,
   Plus,
   Share2,
-  ShareIcon,
   Shield,
   ShieldIcon,
   Truck,
