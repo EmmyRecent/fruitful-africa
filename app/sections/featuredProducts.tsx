@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import ProductCard from "../../components/ProductCard";
-import { products } from "../constants";
+import FeaturedProductCard from "@/components/FeaturedProductCard";
 
 const FeaturedProducts = () => {
   return (
@@ -19,7 +18,7 @@ const FeaturedProducts = () => {
             </p>
           </div>
 
-          <Link href="marketplace">
+          <Link href="/marketplace">
             <Button
               className="border-primaryColor/20 cursor-pointer border bg-transparent text-black"
               size="lg"
@@ -30,22 +29,7 @@ const FeaturedProducts = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
-            <ProductCard
-              id={product.id}
-              key={product.id}
-              country={product.country}
-              amount={product.amount}
-              category={product.category}
-              img={product.img}
-              name={product.name}
-              rating={product.rating}
-              sellerName={product.sellerName}
-              verified={product.verified}
-            />
-          ))}
-        </div>
+        <FeaturedProductCard />
       </div>
     </section>
   );

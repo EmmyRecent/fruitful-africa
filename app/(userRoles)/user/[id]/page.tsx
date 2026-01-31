@@ -47,7 +47,7 @@ const User = () => {
     <Protected>
       <Nav />
 
-      <main className="">
+      <main>
         <div className="from-tertiaryColor to to-primaryColor flex min-h-1/2 items-center justify-center bg-linear-to-b py-20">
           <div className="wrapper">
             {loading ? (

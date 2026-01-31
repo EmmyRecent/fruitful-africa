@@ -1,7 +1,10 @@
+import { getProduct } from "@/firebase/services/firestore";
+import { ProductWithId } from "@/types";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./app.css";
 import { AuthProvider } from "./context/AuthContext";
+import { DataProvider } from "./context/DataContext";
 
 const poppinsFont = Poppins({
   weight: ["400", "500", "600", "700", "800"],
@@ -20,17 +23,27 @@ export const metadata: Metadata = {
   description: "An ecommerce platform",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let products: ProductWithId[] = [];
+
+  try {
+    products = await getProduct();
+  } catch (error) {
+    console.log("Error getting posts:", error);
+  }
+
   return (
     <html lang="en">
       <body
         className={`${poppinsFont.variable} ${interFont.variable} antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <DataProvider initialProducts={products}>{children}</DataProvider>
+        </AuthProvider>
       </body>
     </html>
   );
