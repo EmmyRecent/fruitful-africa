@@ -3,14 +3,19 @@
 import { useData } from "@/app/context/DataContext";
 import ProductCard from "./ProductCard";
 
-const ProductList = () => {
+const ProductList = ({ query }: { query?: string }) => {
   const { products } = useData();
+  const searchedProducts = query
+    ? products.filter((product) =>
+        product.productName.toLowerCase().includes(query.toLowerCase().trim()),
+      )
+    : products;
 
   return (
     <>
-      {products && products.length > 0 ? (
+      {searchedProducts && searchedProducts.length > 0 ? (
         <div className="grid w-full grid-cols-1 items-center justify-center gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
+          {searchedProducts.map((product) => (
             <ProductCard
               key={product.id}
               id={product.id}
