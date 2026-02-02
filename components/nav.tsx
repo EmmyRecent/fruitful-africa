@@ -6,8 +6,9 @@ import { Menu, Search, ShoppingCart, User, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import SearchForm from "./SearchForm";
 
-const Nav = () => {
+const Nav = ({ query }: { query?: string }) => {
   const { user } = useAuth();
   const [openSearch, setOpenSearch] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -50,16 +51,7 @@ const Nav = () => {
           </Link>
 
           <div className="hidden lg:block">
-            <form className="w-full">
-              <div className="has-[input:focus]:border-tertiaryColor flex items-center justify-center gap-4 border-b bg-white">
-                <input
-                  type="text"
-                  className="placeholder:text-tertiaryColor w-full text-base outline-none"
-                  placeholder="Search products, artisans..."
-                />
-                <Search className="text-tertiaryColor size-6 cursor-pointer" />
-              </div>
-            </form>
+            <SearchForm query={query} />
           </div>
 
           {/* Desktop nav links */}
@@ -127,16 +119,7 @@ const Nav = () => {
 
         {openSearch && (
           <div className="pb-1 lg:hidden">
-            <form className="w-full">
-              <div className="has-[input:focus]:border-primaryColor mb-5 flex items-center justify-center gap-4 border-b bg-transparent">
-                <input
-                  type="text"
-                  className="placeholder:text-tertiaryColor h-10 w-full text-base outline-none"
-                  placeholder="Search products..."
-                />
-                <Search className="text-tertiaryColor size-5" />
-              </div>
-            </form>
+            <SearchForm />
           </div>
         )}
       </div>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Category, FeaturedProducts, Features, Hero } from "./sections";
 
-const Page = () => {
+const HomePage = () => {
   return (
     <>
       <Nav />
@@ -38,4 +38,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default HomePage;

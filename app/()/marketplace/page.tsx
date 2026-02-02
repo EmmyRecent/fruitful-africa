@@ -4,23 +4,36 @@ import ProductList from "@/components/ProductList";
 import ProductSkeleton from "@/components/ProductSkeleton";
 import { Suspense } from "react";
 
-const Marketplace = () => {
+type MarketplaceType = {
+  searchParams: Promise<{ query: string }>;
+};
+
+const Marketplace = async ({ searchParams }: MarketplaceType) => {
+  const query = (await searchParams).query;
+
   return (
     <>
-      <Nav />
+      <Nav query={query} />
 
       <main>
         <div className="bg-white">
-          <div className="wrapper py-8 lg:py-10">
-            <h1 className="mb-2 text-xl font-medium">Marketplace</h1>
+          <div className="wrapper py-4 lg:py-8">
+            <h1 className="text-xl font-medium">Marketplace</h1>
             <h2 className="text-tertiaryColor">
               Discover authentic African crafts from verified artisans
             </h2>
           </div>
         </div>
 
-        <section>
+        <div className="min-h-screen py-10 lg:py-16">
           <div className="wrapper">
+            {query && (
+              <p className="mb-4 text-sm">
+                Showing results for{" "}
+                <span className="text-tertiaryColor">{query}</span>
+              </p>
+            )}
+
             <div className="flex min-h-[400px] w-full flex-col items-center justify-center">
               <Suspense
                 fallback={
@@ -31,11 +44,11 @@ const Marketplace = () => {
                   </div>
                 }
               >
-                <ProductList />
+                <ProductList query={query} />
               </Suspense>
             </div>
           </div>
-        </section>
+        </div>
       </main>
 
       <Footer />
