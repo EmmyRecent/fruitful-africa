@@ -2,6 +2,7 @@
 
 import { navLinks } from "@/app/constants";
 import { useAuth } from "@/app/context/AuthContext";
+import { useCart } from "@/app/context/CartContext";
 import { Menu, Search, ShoppingCart, User, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +11,7 @@ import SearchForm from "./SearchForm";
 
 const Nav = ({ query }: { query?: string }) => {
   const { user } = useAuth();
+  const { cartItems } = useCart();
   const [openSearch, setOpenSearch] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
 
@@ -104,12 +106,23 @@ const Nav = ({ query }: { query?: string }) => {
               className="text-secondaryColor size-5 cursor-pointer lg:hidden"
               onClick={handleSearchOpen}
             />
+
             <Link href={"/cart"}>
-              <ShoppingCart className="text-secondaryColor size-5 cursor-pointer" />
+              <div className="relative cursor-pointer">
+                <ShoppingCart className="text-secondaryColor size-5 cursor-pointer" />
+
+                {cartItems && cartItems.length > 0 && (
+                  <div className="bg-primaryColor absolute right-0 bottom-0 flex size-5 translate-x-[15px] translate-y-[15px] items-center justify-center rounded-full p-1">
+                    <p className="text-xs text-white">{cartItems.length}</p>
+                  </div>
+                )}
+              </div>
             </Link>
+
             <Link href={user && user?.uid ? `/user/${user.uid}` : "/login"}>
               <User className="text-secondaryColor size-5 cursor-pointer" />
             </Link>
+
             <Menu
               className="text-secondaryColor size-5 cursor-pointer lg:hidden"
               onClick={handleToggleNav}

@@ -81,3 +81,8 @@ export type ProductDataType = AddProductState["data"] & {
 };
 
 export type ProductWithId = ProductDataType & { id: string };
+
+export type CartItem = ProductDataType & {
+  id: string;
+  quantity: number;
+};

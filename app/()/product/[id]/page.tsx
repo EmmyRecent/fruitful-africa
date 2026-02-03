@@ -1,5 +1,6 @@
 "use client";
 
+import { useCart } from "@/app/context/CartContext";
 import { useData } from "@/app/context/DataContext";
 import ProductDetailOverview from "@/components/ProductDetailOverview";
 import { Button } from "@/components/ui/button";
@@ -18,9 +19,12 @@ import { useState } from "react";
 
 const ProductDetail = () => {
   const { products } = useData();
+  const { addToCart } = useCart();
   const { id } = useParams();
   const productDetail = products.find((product) => product.id === id);
   const [nav, setNav] = useState("overview");
+  const [quantity, setQuantity] = useState(1);
+  const stock = Number(productDetail?.productStock);
 
   if (!productDetail) {
     return (
@@ -30,7 +34,16 @@ const ProductDetail = () => {
     );
   }
 
-  console.log(productDetail);
+  const add = () =>
+    setQuantity((prevValue) => Math.min(stock, (prevValue += 1)));
+
+  const minus = () => setQuantity((prevValue) => Math.max(1, (prevValue -= 1)));
+
+  // const addProductToStock = () => {
+  //   console.log("Product added to stock!!");
+
+  //   // have a stock context
+  // };
 
   return (
     <>
@@ -107,16 +120,18 @@ const ProductDetail = () => {
                       type="button"
                       className="hover:text-primaryColor cursor-pointer transition-colors"
                       aria-label="Decrease quantity"
+                      onClick={minus}
                     >
                       <Minus size={20} />
                     </button>
                     <span className="text-secondaryColor min-w-8 text-center font-medium">
-                      1
+                      {quantity}
                     </span>
                     <button
                       type="button"
                       className="hover:text-primaryColor cursor-pointer transition-colors"
                       aria-label="Increase quantity"
+                      onClick={add}
                     >
                       <Plus size={20} />
                     </button>
@@ -131,9 +146,11 @@ const ProductDetail = () => {
                   <Button className="h-10 flex-1 cursor-pointer sm:flex-2">
                     Buy now
                   </Button>
+
                   <Button
                     variant={"ghost"}
                     className="border-primaryColor/20 hover:bg-primaryColor/5 h-10 flex-1 cursor-pointer border bg-white hover:bg-none"
+                    onClick={() => addToCart(productDetail, quantity)}
                   >
                     Add to Cart
                   </Button>

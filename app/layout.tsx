@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./app.css";
 import { AuthProvider } from "./context/AuthContext";
+import { CartProvider } from "./context/CartContext";
 import { DataProvider } from "./context/DataContext";
 
 const poppinsFont = Poppins({
@@ -42,7 +43,9 @@ export default async function RootLayout({
         className={`${poppinsFont.variable} ${interFont.variable} antialiased`}
       >
         <AuthProvider>
-          <DataProvider initialProducts={products}>{children}</DataProvider>
+          <DataProvider initialProducts={products}>
+            <CartProvider>{children}</CartProvider>
+          </DataProvider>
         </AuthProvider>
       </body>
     </html>
