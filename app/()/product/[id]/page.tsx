@@ -39,12 +39,6 @@ const ProductDetail = () => {
 
   const minus = () => setQuantity((prevValue) => Math.max(1, (prevValue -= 1)));
 
-  // const addProductToStock = () => {
-  //   console.log("Product added to stock!!");
-
-  //   // have a stock context
-  // };
-
   return (
     <>
       <div className="wrapper flex flex-col gap-5 py-8 md:gap-8 md:py-20 lg:gap-10">

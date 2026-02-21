@@ -60,6 +60,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
+    console.log("Updated quantity:", productId, quantity);
+
     setCartItems((prev) =>
       prev.map((item) =>
         item.id === productId
