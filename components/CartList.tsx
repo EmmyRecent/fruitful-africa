@@ -6,8 +6,13 @@ import CartCard from "./CartCard";
 import { Button } from "./ui/button";
 
 const CartList = () => {
-  const { cartItems, totalPrice, updateQuantity, removeFromCart, clearCart } =
-    useCart();
+  const {
+    cartItems,
+    totalPrice,
+    updateQuantity,
+    removeFromCart,
+    clearCart,
+  } = useCart();
 
   if (!cartItems.length) {
     return (
@@ -30,9 +35,9 @@ const CartList = () => {
   return (
     <div className="flex w-full flex-col items-start justify-center gap-4 md:justify-between">
       <div className="flex w-full flex-col items-center justify-center gap-4">
-        {cartItems.map((item, idx) => (
+        {cartItems.map((item) => (
           <CartCard
-            key={idx}
+            key={item.id}
             productId={item.id}
             productImage={item.productImage}
             productName={item.productName}
