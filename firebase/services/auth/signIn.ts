@@ -20,7 +20,7 @@ export const signInUser = async (email: string, password: string) => {
   } catch (error) {
     const firebaseError = error as FirebaseError;
 
-    console.error("Sign-up error:", firebaseError.code, firebaseError.message);
+    console.error("Sign-in error:", firebaseError.code, firebaseError.message);
 
     return {
       error: firebaseError.message,

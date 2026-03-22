@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { verifySessionCookie } from "@/lib/auth/session";
 
-export default async function UserRoleLayout({
+export default async function AdminRoleLayout({
   children,
   params,
 }: Readonly<{
@@ -12,15 +12,16 @@ export default async function UserRoleLayout({
   const decoded = await verifySessionCookie();
 
   if (!decoded) {
-    redirect("/login");
+    redirect("/admin-login");
   }
 
   if (decoded.uid !== id) {
-    redirect(`/user/${decoded.uid}`);
+    redirect(`/admin/${decoded.uid}`);
   }
 
-  if (decoded.role === "admin") {
-    redirect(`/admin/${decoded.uid}`);
+  const role = decoded.role as string | undefined;
+  if (role !== "admin") {
+    redirect(`/user/${decoded.uid}`);
   }
 
   return <div>{children}</div>;

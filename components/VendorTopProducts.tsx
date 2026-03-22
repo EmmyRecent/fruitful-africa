@@ -29,7 +29,7 @@ const VendorTopProducts = () => {
         stock="42"
       />
 
-      <Link href={`/vendor/1/store-front`}>
+      <Link href={`/admin/1/store-front`}>
         <Button className="bg-primaryColor/15 border-primaryColor/20 w-full cursor-pointer border">
           <span className="text-secondaryColor capitalize">
             Manage Inventory

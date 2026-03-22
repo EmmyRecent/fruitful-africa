@@ -27,7 +27,7 @@ const Login = () => {
               </p>
             </div>
 
-            <p className="text-black">Welcome back</p>
+            <p className="font-semibold text-black">Welcome back</p>
 
             <p className="text-tertiaryColor text-base">
               Sign in to your account
@@ -35,7 +35,7 @@ const Login = () => {
           </CardHeader>
 
           <CardContent>
-            <LoginFormField />
+            <LoginFormField userRole="user" />
           </CardContent>
 
           <CardFooter className="flex flex-col gap-4">

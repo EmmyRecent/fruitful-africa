@@ -1,12 +1,12 @@
 "use client";
 
-import VendorAnalytics from "@/components/VendorAnalytics";
-import VendorOrders from "@/components/VendorOrders";
-import VendorOverview from "@/components/VendorOverview";
-import VendorProduct from "@/components/VendorProduct";
+import AdminAnalytics from "@/components/VendorAnalytics";
+import AdminOrders from "@/components/VendorOrders";
+import AdminOverview from "@/components/VendorOverview";
+import AdminProduct from "@/components/VendorProduct";
 import { useState } from "react";
 
-const VendorPageTabs = () => {
+const AdminPageTabs = () => {
   const [nav, setNav] = useState("overview");
 
   return (
@@ -38,12 +38,12 @@ const VendorPageTabs = () => {
         </span>
       </div>
 
-      {nav === "overview" && <VendorOverview />}
-      {nav === "products" && <VendorProduct />}
-      {nav === "orders" && <VendorOrders />}
-      {nav === "analytics" && <VendorAnalytics />}
+      {nav === "overview" && <AdminOverview />}
+      {nav === "products" && <AdminProduct />}
+      {nav === "orders" && <AdminOrders />}
+      {nav === "analytics" && <AdminAnalytics />}
     </>
   );
 };
 
-export default VendorPageTabs;
+export default AdminPageTabs;

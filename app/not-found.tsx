@@ -64,8 +64,8 @@ const NotFound = () => {
 
             <span className="text-base font-semibold">·</span>
 
-            <Link href="become-a-vendor">
-              <p>Become a vendor</p>
+            <Link href="/admin/1">
+              <p>Admin dashboard</p>
             </Link>
           </div>
         </div>

@@ -1,40 +1,41 @@
 "use client";
 
-import { useAuth } from "@/app/context/AuthContext";
+import { auth } from "@/firebase";
 import { signInUser } from "@/firebase/services/auth/signIn";
+import { establishServerSession } from "@/lib/auth/clientSession";
 import { handleLoginValidation } from "@/lib/actions";
+import { signOut } from "firebase/auth";
 import { State } from "@/types";
 import { LockIcon, MailIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import InputField from "./InputField";
 import { Button } from "./ui/button";
 
-const LoginFormField = () => {
-  const { user } = useAuth();
+type LoginFormFieldProps = {
+  userRole: string;
+};
+
+const initialState: State = {
+  errors: {},
+  message: null,
+  data: {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  },
+};
+
+const LoginFormField = ({ userRole }: LoginFormFieldProps) => {
   const [inputValue, setInputValue] = useState({
     email: "",
     password: "",
   });
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [formError, setFormError] = useState("");
-  const initialState: State = {
-    errors: {},
-    message: null,
-    data: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-    },
-  };
-  const [message, formAction, isPending] = useActionState(
-    handleLoginValidation,
-    initialState,
-  );
-  const router = useRouter();
-
+  const [validationState, setValidationState] = useState<State>(initialState);
+  const [isPending, setIsPending] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -50,32 +51,71 @@ const LoginFormField = () => {
     setPasswordVisibility((prevValue) => !prevValue);
   };
 
-  const handleFormSubmission = async () => {
-    const { email, password } = message.data;
+  const handleFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormError("");
+
+    const formData = new FormData(e.currentTarget);
+
+    setIsPending(true);
+
+    const result = await handleLoginValidation(validationState, formData);
+
+    setValidationState(result);
+    setIsPending(false);
+
+    const hasValidationErrors =
+      result.errors && Object.keys(result.errors).length > 0;
+
+    if (hasValidationErrors) return;
+
+    const { email, password } = result.data;
 
     try {
-      const result = await signInUser(email, password);
+      const signInResult = await signInUser(email, password);
 
-      if (result.error) {
-        console.log("There was an error in singing this user in", result.error);
-
+      if (signInResult.error || !signInResult.user) {
         setFormError("Email or Password may be incorrect, please try again!");
-      } else {
-        setInputValue({
-          email: "",
-          password: "",
-        });
-
-        router.push(`/user/${user?.uid}`);
+        return;
       }
+
+      const firebaseUser = signInResult.user;
+
+      // Is admin? Check if the user has the admin custom claim.
+      if (userRole === "admin") {
+        const { claims } = await firebaseUser.getIdTokenResult(true);
+        if (claims.role !== "admin") {
+          setFormError(
+            "This account does not have admin access! Please contact support if you believe this is an error.",
+          );
+
+          // Sign out the user and return.
+          await signOut(auth);
+
+          return;
+        }
+      }
+
+      // Establish server session.
+      try {
+        await establishServerSession(firebaseUser);
+      } catch {
+        setFormError(
+          "Signed in with Firebase, but the server session failed. Check the terminal for POST /api/auth/session errors and that FIREBASE_SERVICE_ACCOUNT_KEY is set in .env.local.",
+        );
+        return;
+      }
+
+      setInputValue({ email: "", password: "" });
+      // Full page navigation so the new httpOnly session cookie is always sent (avoids proxy sending you back to login).
+      window.location.assign(`/${userRole}/${firebaseUser.uid}`);
     } catch (error) {
-      console.log("Error submitting form", error);
+      console.error("Error submitting form", error);
     }
   };
 
   return (
-    // Fix /remove onsubmit function
-    <form action={formAction} onSubmit={handleFormSubmission}>
+    <form onSubmit={handleFormSubmission}>
       <div className="mt-6 flex flex-col gap-4">
         <InputField
           type="email"
@@ -85,7 +125,7 @@ const LoginFormField = () => {
           inputValue={inputValue}
           handleChange={handleChange}
           Component={MailIcon}
-          fieldErrors={message?.errors?.email}
+          fieldErrors={validationState?.errors?.email}
         />
 
         <InputField
@@ -98,14 +138,16 @@ const LoginFormField = () => {
           Component={LockIcon}
           passwordVisibility={passwordVisibility}
           handleTogglePasswordVisibility={handleTogglePasswordVisibility}
-          fieldErrors={message?.errors?.password}
+          fieldErrors={validationState?.errors?.password}
         />
 
-        <Link href="#" className="ml-auto">
-          <p className="text-primaryColor text-sm hover:underline">
-            Forgot password?
-          </p>
-        </Link>
+        {userRole && userRole !== "admin" && (
+          <Link href="#" className="ml-auto">
+            <p className="text-primaryColor text-sm hover:underline">
+              Forgot password?
+            </p>
+          </Link>
+        )}
       </div>
 
       {formError && <p className="pt-1 text-xs text-red-600">{formError}</p>}

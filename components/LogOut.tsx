@@ -1,16 +1,18 @@
 import { signOutUser } from "@/firebase/services/auth/signOut";
 import { LogOutIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 
 const LogOut = () => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleLogOut = async () => {
     try {
       await signOutUser();
 
-      router.push("/login");
+      const isAdminArea = pathname.includes("/admin");
+      router.push(isAdminArea ? "/admin-login" : "/login");
     } catch (error) {
       throw new Error("Failed to log user out!", { cause: error });
     }

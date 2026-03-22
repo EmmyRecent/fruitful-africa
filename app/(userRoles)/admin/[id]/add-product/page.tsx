@@ -8,10 +8,11 @@ import { handleAddProductValidation } from "@/lib/actions";
 import { uploadManyToFirebase } from "@/lib/firebaseUpload";
 import { AddProductState, ProductDataType } from "@/types";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useActionState, useEffect, useState } from "react";
 
 const AddProduct = () => {
+  const params = useParams<{ id: string }>();
   const [inputValue, setInputValue] = useState({
     productName: "",
     productCategory: "",
@@ -103,6 +104,7 @@ const AddProduct = () => {
 
     if (hasErrors || !hasData) return;
 
+    // Persist product to the database
     const persistProduct = async () => {
       try {
         const data: ProductDataType = {
@@ -127,14 +129,15 @@ const AddProduct = () => {
           productStock: "",
         });
 
-        router.push("/vendor/1");
+        const adminId = params.id;
+        if (adminId) router.push(`/admin/${adminId}`);
       } catch (error) {
         console.error("Failed to add product", error);
       }
     };
 
     void persistProduct();
-  }, [message, router]);
+  }, [message, router, params.id]);
 
   return (
     <section>
@@ -204,7 +207,6 @@ const AddProduct = () => {
                     alt="Product Image"
                     width={400}
                     height={400}
-                    // fill
                     className="rounded-round object-cover shadow-xl"
                   />
                 ))}

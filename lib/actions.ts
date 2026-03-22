@@ -81,7 +81,7 @@ export const handleLoginValidation = async (
 
   return {
     errors: {},
-    message: "Sign-up successful! Welcome aboard.",
+    message: "login successful! Welcome aboard.",
     data: parsed.data,
   };
 };

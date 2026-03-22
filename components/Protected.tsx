@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/app/context/AuthContext";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import { Spinner } from "./ui/spinner";
 
@@ -10,19 +10,20 @@ const Protected = ({ children }: { children: ReactNode }) => {
   const { user, loading } = useAuth();
   const router = useRouter();
   const params = useParams();
+  const pathname = usePathname();
 
   useEffect(() => {
+    const isAdmin = pathname.split("/").includes("admin");
+
     if (!loading && !user) {
-      router.replace("/login");
+      router.replace(isAdmin ? "/admin-login" : "/login");
+      return;
     }
 
-    // Validate the user id matches the url
-    if (!loading && user) {
-      if (params.id !== user.uid) {
-        router.replace(`/user/${user.uid}`);
-      }
+    if (!loading && user && params.id !== user.uid) {
+      router.replace(isAdmin ? `/admin/${user.uid}` : `/user/${user.uid}`);
     }
-  }, [user, loading, router, params.id]);
+  }, [user, loading, router, params.id, pathname]);
 
   if (loading)
     return (

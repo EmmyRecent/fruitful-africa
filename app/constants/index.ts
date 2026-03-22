@@ -6,8 +6,8 @@ export const navLinks: NavLinksType[] = [
     text: "Marketplace",
   },
   {
-    href: "/vendor/1",
-    text: "Become a Vendor",
+    href: "/about",
+    text: "About",
   },
 ];
 

@@ -4,7 +4,7 @@ import { useData } from "@/app/context/DataContext";
 import CardStat from "@/components/CardStat";
 import { Eye, Package, PoundSterlingIcon, ShoppingCart } from "lucide-react";
 
-const VendorDashboardStats = () => {
+const AdminDashboardStats = () => {
   const { products } = useData();
 
   return (
@@ -21,4 +21,4 @@ const VendorDashboardStats = () => {
   );
 };
 
-export default VendorDashboardStats;
+export default AdminDashboardStats;

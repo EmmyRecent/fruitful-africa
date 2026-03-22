@@ -2,18 +2,30 @@
 
 import { useAuth } from "@/app/context/AuthContext";
 import { signUpUser } from "@/firebase/services/auth";
+import { establishServerSession } from "@/lib/auth/clientSession";
 import { addUserToCustomerCollection } from "@/firebase/services/firestore";
 import { handleSignUpFormValidation } from "@/lib/actions";
 import { State, UserCustomerData } from "@/types";
 import { Timestamp } from "firebase/firestore";
 import { LockIcon, MailIcon, User } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useActionState, useState } from "react";
 import InputField from "./InputField";
 import { Button } from "./ui/button";
+import { object } from "zod";
+
+const initialState: State = {
+  errors: {},
+  message: null,
+  data: {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  },
+};
 
 const SignUpFormField = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [inputValue, setInputValue] = useState({
     firstName: "",
     lastName: "",
@@ -21,22 +33,9 @@ const SignUpFormField = () => {
     password: "",
   });
   const [passwordVisibility, setPasswordVisibility] = useState(false);
-  const initialState: State = {
-    errors: {},
-    message: null,
-    data: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-    },
-  };
-  const [message, formAction, isPending] = useActionState(
-    handleSignUpFormValidation,
-    initialState,
-  );
-  const router = useRouter();
-
+  const [formError, setFormError] = useState("");
+  const [validationState, setValidationState] = useState<State>(initialState);
+  const [isPending, setIsPending] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInputValue((prevValue) => ({
@@ -49,43 +48,73 @@ const SignUpFormField = () => {
     setPasswordVisibility((prevValue) => !prevValue);
   };
 
-  const handleFormSubmission = async () => {
-    const { firstName, lastName, email, password } = message.data;
+  //A function to handle user signing into the
+  const handleFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    console.log("email and password:", email, password);
+    setFormError("");
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    setIsPending(true);
+
+    const result = await handleSignUpFormValidation(validationState, formData);
+
+    setValidationState(result);
+    setIsPending(false);
+
+    const hasValidationErrors =
+      result.errors && Object.keys(result.errors).length > 0;
+
+    if (hasValidationErrors) return;
+
+    const { firstName, lastName, email, password } = result.data;
 
     try {
-      const result = await signUpUser(email, password);
+      const signUpResult = await signUpUser(email, password);
+
       const data: UserCustomerData = {
         firstName,
         lastName,
         email,
         initial: `${firstName?.slice(0, 1)}${lastName?.slice(0, 1)}`,
         createdAt: Timestamp.now(),
-      }; 
+      };
 
-      console.log("Result from user signUp:", result);
+      if (signUpResult.error) {
+        setFormError("Error signing user, please try again!");
+      } else {
+        const uid = signUpResult.user?.uid;
 
-      // TODO: Store user information in database
-      if (result.user) {
-        await addUserToCustomerCollection(data, result.user?.uid);
+        if (uid && signUpResult.user) {
+          await addUserToCustomerCollection(data, uid);
 
-        setInputValue({
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-        });
+          try {
+            await establishServerSession(signUpResult.user);
+          } catch {
+            setFormError("Account created but session failed. Try signing in.");
+            return;
+          }
 
-        router.push(`/user/${user?.uid}`);
+          setInputValue({
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+          });
+          window.location.assign(`/user/${uid}`);
+        }
       }
+
+      console.log("Result from user signUp:", signUpResult);
     } catch (error) {
       console.log("Error submitting form", error);
     }
   };
 
   return (
-    <form action={formAction} onSubmit={handleFormSubmission}>
+    <form onSubmit={handleFormSubmission}>
       <div className="mt-6 flex flex-col gap-4">
         <InputField
           type="text"
@@ -95,7 +124,7 @@ const SignUpFormField = () => {
           inputValue={inputValue}
           handleChange={handleChange}
           Component={User}
-          fieldErrors={message?.errors?.firstName}
+          fieldErrors={validationState?.errors?.firstName}
         />
 
         <InputField
@@ -106,7 +135,7 @@ const SignUpFormField = () => {
           inputValue={inputValue}
           handleChange={handleChange}
           Component={User}
-          fieldErrors={message?.errors?.lastName}
+          fieldErrors={validationState?.errors?.lastName}
         />
 
         <InputField
@@ -117,7 +146,7 @@ const SignUpFormField = () => {
           inputValue={inputValue}
           handleChange={handleChange}
           Component={MailIcon}
-          fieldErrors={message?.errors?.email}
+          fieldErrors={validationState?.errors?.email}
         />
 
         <InputField
@@ -130,7 +159,7 @@ const SignUpFormField = () => {
           Component={LockIcon}
           passwordVisibility={passwordVisibility}
           handleTogglePasswordVisibility={handleTogglePasswordVisibility}
-          fieldErrors={message?.errors?.password}
+          fieldErrors={validationState?.errors?.password}
         />
 
         {/* <Link href="#" className="ml-auto">
@@ -139,6 +168,8 @@ const SignUpFormField = () => {
                   </p>
                 </Link> */}
       </div>
+
+      {formError && <p className="pt-1 text-xs text-red-600">{formError}</p>}
 
       <Button
         type="submit"
