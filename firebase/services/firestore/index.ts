@@ -1,4 +1,4 @@
-import { db } from "@/firebase";
+import { db, storage } from "@/firebase";
 import {
   CartItem,
   ProductDataType,
@@ -7,12 +7,16 @@ import {
 } from "@/types";
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   setDoc,
+  updateDoc,
   writeBatch,
 } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 
 export const addUserToCustomerCollection = async (
   data: UserCustomerData,
@@ -56,6 +60,20 @@ export const addProductToProductCollection = async (data: ProductDataType) => {
   }
 };
 
+export const updateProductCollection = async (
+  data: ProductDataType,
+  id: string,
+) => {
+  try {
+    const productDocRef = doc(db, "product", id);
+    const result = await updateDoc(productDocRef, data);
+
+    console.log("Product updated successfully!", result);
+  } catch (error) {
+    throw new Error("Failed to update product document", { cause: error });
+  }
+};
+
 export const getProduct = async (): Promise<ProductWithId[]> => {
   try {
     const q = await getDocs(collection(db, "product"));
@@ -68,6 +86,27 @@ export const getProduct = async (): Promise<ProductWithId[]> => {
   } catch (error) {
     throw new Error("Failed to get products data:", { cause: error });
   }
+};
+
+export const subscribeToProducts = (
+  onNext: (products: ProductWithId[]) => void,
+  onError?: (error: unknown) => void,
+) => {
+  const colRef = collection(db, "product");
+
+  return onSnapshot(
+    colRef,
+    (snapshot) => {
+      const products = snapshot.docs.map((d) => ({
+        id: d.id,
+        ...(d.data() as ProductDataType),
+      }));
+      onNext(products);
+    },
+    (error) => {
+      onError?.(error);
+    },
+  );
 };
 
 /**
@@ -116,5 +155,26 @@ export const getCartItemsFromCartCollection = async (
     return cartItems;
   } catch (error) {
     throw new Error("Failed to get cart items data", { cause: error });
+  }
+};
+
+export const deleteProduct = async (
+  productId: string,
+  productImage: string[],
+) => {
+  try {
+    const productImageRef = productImage.map((image) =>
+      deleteObject(ref(storage, image)),
+    );
+    const productDocRef = doc(db, "product", productId);
+
+    await Promise.all(productImageRef);
+    await deleteDoc(productDocRef);
+
+    console.log("Successfully deleted product from collection!");
+  } catch (error) {
+    throw new Error(`Failed to delete product ${productId} from collection`, {
+      cause: error,
+    });
   }
 };

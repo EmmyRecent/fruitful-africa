@@ -34,7 +34,7 @@ export default async function RootLayout({
   try {
     products = await getProduct();
   } catch (error) {
-    console.log("Error getting posts:", error);
+    console.log("Error getting products:", error);
   }
 
   return (

@@ -58,7 +58,7 @@ const Nav = ({ query }: { query?: string }) => {
 
           {/* Desktop nav links */}
           <nav className="hidden lg:block">
-            <ul className="[&>a]:hover:text-primaryColor [&>a]:text-secondaryColor flex gap-4 [&>a]:text-lg">
+            <ul className="[&>a]:hover:text-primaryColor [&>a]:text-secondaryColor flex gap-4 [&>a]:text-base">
               {navLinks.map((link) => (
                 <Link key={link.text} href={link.href}>
                   <li>{link.text}</li>

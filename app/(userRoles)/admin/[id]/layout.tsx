@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 import { verifySessionCookie } from "@/lib/auth/session";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
 
 export default async function AdminRoleLayout({
   children,
@@ -24,5 +26,13 @@ export default async function AdminRoleLayout({
     redirect(`/user/${decoded.uid}`);
   }
 
-  return <div>{children}</div>;
+  return (
+    <>
+      <Nav />
+
+      {children}
+
+      <Footer />
+    </>
+  );
 }

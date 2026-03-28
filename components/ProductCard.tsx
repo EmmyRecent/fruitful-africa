@@ -1,8 +1,19 @@
+import { useAuth } from "@/app/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
-import { Shield } from "lucide-react";
+import { MoreHorizontal, PencilLine, Shield } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { usePathname } from "next/navigation";
+import { deleteProduct } from "@/firebase/services/firestore";
+import { useMemo } from "react";
+import { useData } from "@/app/context/DataContext";
 
 type ProductCardProps = {
   id: string;
@@ -27,6 +38,26 @@ const ProductCard = ({
   amount,
   description,
 }: ProductCardProps) => {
+  const { user } = useAuth();
+  const { products } = useData();
+  const pathname = usePathname();
+  const isAdmin = pathname.includes("admin");
+  const productDetail = useMemo(
+    () => products.find((product) => product.id === id),
+    [products, id],
+  );
+
+  if (!user) return;
+  if (!productDetail) return;
+
+  const handleDeleteProduct = async () => {
+    try {
+      await deleteProduct(id, productDetail.productImage);
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+
   return (
     <Card className="rounded-round relative h-full w-full border-none bg-none p-0 shadow-lg">
       <Image
@@ -43,6 +74,36 @@ const ProductCard = ({
       </div>
 
       <CardContent className="flex flex-col gap-1 px-4">
+        {isAdmin && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="mb-4 ml-auto">
+              <Button
+                variant="ghost"
+                className="hover:bg-primaryColor/20 h-8 w-max rotate-90"
+              >
+                <MoreHorizontal className="text-primaryColor" />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent className="-translate-x-5 md:-translate-x-8">
+              <Link href={`/admin/${user.uid}/edit-product/${id}`}>
+                <DropdownMenuItem className="cursor-pointer">
+                  Edit{" "}
+                  <span>
+                    <PencilLine size={4} />
+                  </span>
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={handleDeleteProduct}
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+
         <div className="rounded-round flex items-center justify-between">
           <CardTitle className="text-secondaryColor m-0 p-0 text-xl">
             {name}

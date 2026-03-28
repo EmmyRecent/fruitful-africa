@@ -1,6 +1,4 @@
 import CartList from "@/components/CartList";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 const Cart = () => {
   return (
@@ -13,12 +11,6 @@ const Cart = () => {
 
           <div className="flex w-full max-w-[800px] flex-col items-center justify-center gap-4">
             <CartList />
-
-            <Link href={"/checkout"} className="w-full">
-              <Button className="h-12 w-full cursor-pointer">
-                Proceed to checkout
-              </Button>
-            </Link>
           </div>
         </div>
       </section>

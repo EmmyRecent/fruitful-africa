@@ -2,8 +2,6 @@
 
 import { useAuth } from "@/app/context/AuthContext";
 import AdminPage from "@/components/AdminPage";
-import Footer from "@/components/Footer";
-import Nav from "@/components/Nav";
 import Protected from "@/components/Protected";
 
 const Admin = () => {
@@ -18,11 +16,7 @@ const Admin = () => {
 
   return (
     <Protected>
-      <Nav />
-
       <AdminPage id={id} />
-
-      <Footer />
     </Protected>
   );
 };

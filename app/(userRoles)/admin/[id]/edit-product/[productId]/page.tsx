@@ -1,18 +1,31 @@
 "use client";
 
+import { useData } from "@/app/context/DataContext";
 import InputField from "@/components/InputField";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { addProductToProductCollection } from "@/firebase/services/firestore";
+import {
+  addProductToProductCollection,
+  updateProductCollection,
+} from "@/firebase/services/firestore";
 import { handleAddProductValidation } from "@/lib/actions";
 import { uploadManyToFirebase } from "@/lib/firebaseUpload";
 import { AddProductState, ProductDataType } from "@/types";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import React, { useActionState, useEffect, useState } from "react";
+import React, { useActionState, useEffect, useMemo, useState } from "react";
 
-const AddProduct = () => {
-  const params = useParams<{ id: string }>();
+const EditProduct = () => {
+  const { products } = useData();
+  const params = useParams<{ id: string; productId: string }>();
+  const router = useRouter();
+
+  const productId = params.productId;
+  const productDetail = useMemo(
+    () => products.find((product) => product.id === productId),
+    [products, productId],
+  );
+
   const [inputValue, setInputValue] = useState({
     productName: "",
     productCategory: "",
@@ -22,6 +35,7 @@ const AddProduct = () => {
     productDescription: "",
     productStock: "",
   });
+
   const initialState: AddProductState = {
     errors: {},
     message: null,
@@ -35,11 +49,29 @@ const AddProduct = () => {
       productStock: "",
     },
   };
+
   const [message, formAction, isPending] = useActionState(
     handleAddProductValidation,
     initialState,
   );
-  const router = useRouter();
+
+  useEffect(() => {
+    if (!productDetail) return;
+
+    const handleSetInput = () => {
+      setInputValue({
+        productName: productDetail.productName ?? "",
+        productCategory: productDetail.productCategory ?? "",
+        productLocation: productDetail.productLocation ?? "",
+        productImage: productDetail.productImage ?? [],
+        productPrice: productDetail.productPrice ?? "",
+        productDescription: productDetail.productDescription ?? "",
+        productStock: productDetail.productStock ?? "",
+      });
+    };
+
+    handleSetInput();
+  }, [productDetail]);
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files, type } = e.target;
@@ -88,8 +120,6 @@ const AddProduct = () => {
     });
   };
 
-  // console.log("Validation:", message);
-
   useEffect(() => {
     const hasErrors = Object.keys(message.errors ?? {}).length > 0;
     const hasData =
@@ -104,7 +134,6 @@ const AddProduct = () => {
 
     if (hasErrors || !hasData) return;
 
-    // Persist product to the database
     const persistProduct = async () => {
       try {
         const data: ProductDataType = {
@@ -117,20 +146,9 @@ const AddProduct = () => {
           productStock: message.data.productStock,
         };
 
-        await addProductToProductCollection(data);
-
-        setInputValue({
-          productName: "",
-          productCategory: "",
-          productLocation: "",
-          productImage: [],
-          productPrice: "",
-          productDescription: "",
-          productStock: "",
-        });
+        await updateProductCollection(data, productId);
 
         const adminId = params.id;
-
         if (adminId) router.push(`/admin/${adminId}`);
       } catch (error) {
         console.error("Failed to add product", error);
@@ -138,14 +156,14 @@ const AddProduct = () => {
     };
 
     void persistProduct();
-  }, [message, router, params.id]);
+  }, [message, router, params.id, productId]);
 
   return (
     <section>
       <Card className="wrapper w-full max-w-[800px]">
         <CardHeader>
           <h1 className="text-primaryColor text-center text-lg font-semibold capitalize">
-            Add Product
+            Edit Product
           </h1>
         </CardHeader>
 
@@ -250,7 +268,7 @@ const AddProduct = () => {
               disabled={isPending}
               className="bg-primaryColor hover:bg-primaryColor/90 rounded-round mt-6 w-full cursor-pointer font-medium text-white"
             >
-              {isPending ? "Submitting" : "Add"}
+              {isPending ? "Submitting" : "Save"}
             </Button>
           </form>
         </CardContent>
@@ -259,4 +277,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditProduct;

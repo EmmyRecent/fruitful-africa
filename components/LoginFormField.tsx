@@ -76,6 +76,7 @@ const LoginFormField = ({ userRole }: LoginFormFieldProps) => {
 
       if (signInResult.error || !signInResult.user) {
         setFormError("Email or Password may be incorrect, please try again!");
+
         return;
       }
 
@@ -84,6 +85,7 @@ const LoginFormField = ({ userRole }: LoginFormFieldProps) => {
       // Is admin? Check if the user has the admin custom claim.
       if (userRole === "admin") {
         const { claims } = await firebaseUser.getIdTokenResult(true);
+
         if (claims.role !== "admin") {
           setFormError(
             "This account does not have admin access! Please contact support if you believe this is an error.",
@@ -103,6 +105,7 @@ const LoginFormField = ({ userRole }: LoginFormFieldProps) => {
         setFormError(
           "Signed in with Firebase, but the server session failed. Check the terminal for POST /api/auth/session errors and that FIREBASE_SERVICE_ACCOUNT_KEY is set in .env.local.",
         );
+
         return;
       }
 

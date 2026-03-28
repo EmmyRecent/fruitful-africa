@@ -1,7 +1,8 @@
 "use client";
 
 import { ProductWithId } from "@/types";
-import { createContext, useContext, useState } from "react";
+import { subscribeToProducts } from "@/firebase/services/firestore";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type DataContextType = {
   products: ProductWithId[];
@@ -18,6 +19,14 @@ export const DataProvider = ({
   children: React.ReactNode;
 }) => {
   const [products, setProducts] = useState<ProductWithId[]>(initialProducts);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToProducts(setProducts, (error) => {
+      console.error("Failed to subscribe to products:", error);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <DataContext.Provider value={{ products, setProducts }}>

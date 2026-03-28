@@ -46,7 +46,9 @@ const InputField = ({
 }: InputFieldProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const currentValue =
-    name && name in inputValue ? inputValue[name as keyof typeof inputValue] || "" : "";
+    name && name in inputValue
+      ? inputValue[name as keyof typeof inputValue] || ""
+      : "";
 
   const handleOpenFilePicker = () => {
     fileInputRef.current?.click();
@@ -95,7 +97,6 @@ const InputField = ({
       </div>
     );
   }
-
   if (type === "file") {
     return (
       <div>
@@ -142,7 +143,7 @@ const InputField = ({
   if (type === "textarea") {
     return (
       <div>
-         <label
+        <label
           htmlFor={name}
           className="mb-2 block w-max text-sm font-medium text-black"
         >
@@ -150,14 +151,21 @@ const InputField = ({
         </label>
 
         <div className="rounded-round has-[textarea:focus]:border-tertiaryColor flex items-center gap-2 border border-gray-300 bg-white px-4 py-2">
-          <textarea name={name} id={name} value={currentValue} onChange={handleTextareaChange} placeholder={placeholder} className="rounded-round h-32 w-full bg-transparent outline-none"></textarea>
+          <textarea
+            name={name}
+            id={name}
+            value={currentValue}
+            onChange={handleTextareaChange}
+            placeholder={placeholder}
+            className="rounded-round h-32 w-full bg-transparent outline-none"
+          ></textarea>
         </div>
 
         {fieldErrors && fieldErrors.length > 0 && (
           <p className="pt-1 text-xs text-red-600">{fieldErrors[0]}</p>
         )}
       </div>
-    )
+    );
   }
 
   return (

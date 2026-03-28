@@ -2,8 +2,12 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import VendorTopProductsCard from "./VendorTopProductsCard";
+import { useAuth } from "@/app/context/AuthContext";
 
 const VendorTopProducts = () => {
+  const { user } = useAuth();
+  const id = user?.uid;
+
   return (
     <Card className="rounded-round border-primaryColor/20 w-full border px-4 shadow-none md:max-w-1/2">
       <h4 className="text-black capitalize">Top products</h4>
@@ -29,7 +33,7 @@ const VendorTopProducts = () => {
         stock="42"
       />
 
-      <Link href={`/admin/1/store-front`}>
+      <Link href={`/admin/${id}/store-front`}>
         <Button className="bg-primaryColor/15 border-primaryColor/20 w-full cursor-pointer border">
           <span className="text-secondaryColor capitalize">
             Manage Inventory

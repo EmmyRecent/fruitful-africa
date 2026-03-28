@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { LogOutIcon } from "lucide-react";
 import Link from "next/link";
+import AddProductButton from "./AddProductButton";
 
 type AdminPageHeaderProps = {
   id: string;
@@ -15,16 +15,12 @@ const AdminPageHeader = ({ id }: AdminPageHeaderProps) => {
             <p className="text-2xl font-semibold text-white capitalize">
               Admin Dashboard
             </p>
+
             <p className="text-base text-white">Welcome back, James</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <Link href={`/admin/${id}/add-product`}>
-              <Button className="cursor-pointer bg-white/10">
-                <LogOutIcon className="rotate-270 transform" />
-                <span>Add product</span>
-              </Button>
-            </Link>
+            <AddProductButton id={id} />
 
             <Link href={`/admin/${id}/store-front`}>
               <Button variant="default" className="cursor-pointer">
